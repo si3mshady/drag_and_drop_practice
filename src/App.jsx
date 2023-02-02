@@ -4,7 +4,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import './App.css'
 
 function App() {
-const   [listOrder, setListOrder] = useState()
+
 const muntants = [
     
   {id: '1', name: 'nightcrawler', image: "src/assets/nc-gif.gif"},
@@ -14,14 +14,28 @@ const muntants = [
   {id: '5', name: 'quicksilver', image: "src/assets/quicksilver.gif"}
 ]
 
+const   [listOrder, setListOrder] = useState(muntants)
+
+const dropReset = (result) => {
+  if (!result.destination) return;
+  console.log(result)
+  const listcopy = Array.from(listOrder)
+  const [list_element] = listcopy.splice(result.source.index,1) //remove element from array
+  listcopy.splice(result.destination.index,0, list_element)
+
+  setListOrder(listcopy)
+}
+
   return (
-    <div className="main">
+    <div className="main">               v                                                                                                                                    
     <div className='header'>
        <h1>XMEN GIFS</h1>
     </div>
 
+
+
     {/* <img src='src/assets/cyclops.gif' /> */}
-    <DragDropContext >
+    <DragDropContext onDragEnd={dropReset} >
     <Droppable droppableId='xmen'>
 
     {
@@ -29,7 +43,7 @@ const muntants = [
           <ul {...provided.droppableProps} ref={provided.innerRef} className='muntants'>
 
           {
-            muntants.map(({id,name,image}, idx) => {
+            listOrder.map(({id,name,image}, idx) => {
 
               return (
               <Draggable key={id} draggableId={id} index={idx}>
